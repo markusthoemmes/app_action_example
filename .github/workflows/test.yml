@@ -51,13 +51,17 @@ jobs:
           deploy_preview: "true"
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - uses: actions/github-script@v7
+        env:
+          BUILD_LOGS: ${{ steps.run.outputs.build_logs }}
+          DEPLOY_LOGS: ${{ steps.run.outputs.deploy_logs }}
         with:
           script: |
+            const { BUILD_LOGS, DEPLOY_LOGS } = process.env
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: ":rocket: :rocket: :rocket: The app was successfully deployed at ${{ fromJson(steps.run.outputs.app).live_url }}.\n\n## Logs\n<details><summary>Build logs</summary>```${{ steps.run.outputs.build_logs }}```</details><details><summary>Deploy logs</summary>```${{ steps.run.outputs.deploy_logs }}```</details>"
+              body: `:rocket: :rocket: :rocket: The app was successfully deployed at ${{ fromJson(steps.run.outputs.app).live_url }}.\n\n## Logs\n<details><summary>Build logs</summary>${BUILD_LOGS}</details><details><summary>Deploy logs</summary>${DEPLOY_LOGS}</details>`
             })
       - uses: actions/github-script@v7
         if: failure()
