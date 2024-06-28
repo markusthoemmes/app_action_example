@@ -1,0 +1,24 @@
+name: Example Workflow
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  test:
+    name: Test the Action
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+      - name: deploy the app
+        id: run
+        uses: markusthoemmes/app_action_v2@main
+        with:
+          deploy_preview: "true"
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
