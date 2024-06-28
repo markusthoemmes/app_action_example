@@ -57,7 +57,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: ':rocket: :rocket: :rocket: The app was successfully deployed at ${{ fromJson(steps.run.outputs.app).live_url }}. Logs can be found [here](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}).'
+              body: ":rocket: :rocket: :rocket: The app was successfully deployed at ${{ fromJson(steps.run.outputs.app).live_url }}.\n\n## Logs\n<details><summary>Build logs</summary>```${{ steps.run.outputs.build_logs }}```</details><details><summary>Deploy logs</summary>```${{ steps.run.outputs.deploy_logs }}```</details>"
             })
       - uses: actions/github-script@v7
         if: failure()
