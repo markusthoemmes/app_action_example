@@ -20,7 +20,7 @@ jobs:
         with:
           route: POST /repos/:repository/deployments
           repository: ${{ github.repository }}
-          ref: ${{ github.ref }}
+          ref: ${{ github.head_ref }}
           environment: dev
           auto_merge: false
         env:
