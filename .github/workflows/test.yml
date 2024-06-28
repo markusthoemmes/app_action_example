@@ -22,7 +22,7 @@ jobs:
           repository: ${{ github.repository }}
           ref: ${{ github.head_ref }}
           environment: ${{ github.head_ref }}
-          required_contexts: []
+          required_contexts: "[]"
           auto_merge: false
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
