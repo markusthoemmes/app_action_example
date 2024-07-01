@@ -1,117 +1,39 @@
-name: Example Workflow
+name: Create and publish a Docker image
 
 on:
   pull_request:
     branches: [main]
 
-permissions:
-  pull-requests: write
+# Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  test:
-    name: Test the Action
+  build-and-push-image:
     runs-on: ubuntu-latest
-
+    # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      # 
     steps:
-      # - name: create deployment
-      #   id: create_deployment
-      #   uses: octokit/request-action@v2.x
-      #   with:
-      #     route: POST /repos/:repository/deployments
-      #     repository: ${{ github.repository }}
-      #     ref: ${{ github.head_ref }}
-      #     environment: ${{ github.head_ref }}
-      #     required_contexts: "[]"
-      #     auto_merge: false
-      #   env:
-      #     GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-
-      # - name: set deployment status to in progress
-      #   id: start_deployment
-      #   uses: octokit/request-action@v2.x
-      #   with:
-      #     route: POST /repos/:repository/deployments/:deployment/statuses
-      #     repository: ${{ github.repository }}
-      #     deployment: ${{ fromJson(steps.create_deployment.outputs.data).id }}
-      #     environment: ${{ github.head_ref }}
-      #     log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-      #     state: in_progress
-      #   env:
-      #     GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-
-      - name: checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
-      - name: deploy the app
-        id: run
-        uses: markusthoemmes/app_actions/deploy@main
+      # Uses the `docker/login-action` action to log in to the Container registry registry using the account and password that will publish the packages. Once published, the packages are scoped to the account defined here.
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
         with:
-          deploy_pr_preview: "true"
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-      - uses: actions/github-script@v7
-        env:
-          BUILD_LOGS: ${{ steps.run.outputs.build_logs }}
-          DEPLOY_LOGS: ${{ steps.run.outputs.deploy_logs }}
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      # This step uses the `docker/build-push-action` action to build the image, based on your repository's `Dockerfile`. If the build succeeds, it pushes the image to GitHub Packages.
+      # It uses the `context` parameter to define the build's context as the set of files located in the specified path. For more information, see "[Usage](https://github.com/docker/build-push-action#usage)" in the README of the `docker/build-push-action` repository.
+      # It uses the `tags` and `labels` parameters to tag and label the image with the output from the "meta" step.
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
-          script: |
-            const { BUILD_LOGS, DEPLOY_LOGS } = process.env
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `:rocket: :rocket: :rocket: The app was successfully deployed at ${{ fromJson(steps.run.outputs.app).live_url }}.
-              
-              ## Logs
-              <details>
-              <summary>Build logs</summary>
-
-              \`\`\`
-              ${BUILD_LOGS}
-              \`\`\`
-              </details>
-              
-              <details>
-              <summary>Deploy logs</summary>
-              
-              \`\`\`
-              ${DEPLOY_LOGS}
-              \`\`\`
-              </details>`
-            })
-      - uses: actions/github-script@v7
-        if: failure()
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: 'The app failed to be deployed. Logs can be found [here](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}).'
-            })
-
-      # - name: set deployment status to success
-      #   id: successful_deployment
-      #   uses: octokit/request-action@v2.x
-      #   with:
-      #     route: POST /repos/:repository/deployments/:deployment/statuses
-      #     repository: ${{ github.repository }}
-      #     deployment: ${{ fromJson(steps.create_deployment.outputs.data).id }}
-      #     environment: ${{ github.head_ref }}
-      #     environment_url: ${{ fromJson(steps.run.outputs.app).live_url }}
-      #     log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-      #     state: success
-      #   env:
-      #     GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-
-      # - name: set deployment status to failure
-      #   id: failed_deployment
-      #   uses: octokit/request-action@v2.x
-      #   if: failure()
-      #   with:
-      #     route: POST /repos/:repository/deployments/:deployment/statuses
-      #     repository: ${{ github.repository }}
-      #     deployment: ${{ fromJson(steps.create_deployment.outputs.data).id }}
-      #     environment: ${{ github.head_ref }}
-      #     log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-      #     state: failure
-      #   env:
-      #     GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          context: .
+          push: true

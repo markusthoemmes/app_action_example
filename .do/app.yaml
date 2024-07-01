@@ -1,8 +1,8 @@
 name: sample-nodejs
 services:
-- environment_slug: node-js
-  github:
-    branch: main
-    deploy_on_push: true
-    repo: markusthoemmes/sample-nodejs
-  name: sample-nodejs
+- image:
+    registry_type: GHCR
+    registry: markusthoemmes
+    repository: app_action_example
+    digest: ${FOOBAR_DIGEST}
+  name: sample
