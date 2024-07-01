@@ -34,4 +34,12 @@ jobs:
           context: .
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+      - name: deploy the app
+        id: deploy
+        uses: markusthoemmes/app_actions/deploy@main
+        env:
+          FOOBAR_DIGEST: ${{ steps.push.outputs.digest }}
+        with:
+          deploy_pr_preview: "true"
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
