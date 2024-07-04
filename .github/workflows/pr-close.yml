@@ -9,7 +9,7 @@ jobs:
   closed:
     runs-on: ubuntu-latest
     steps:
-    - name: delete preview app
+      - name: delete preview app
         uses: markusthoemmes/app_actions/delete@main
         with:
           from_pr_preview: "true"
