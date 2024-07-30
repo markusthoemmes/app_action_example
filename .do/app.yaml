@@ -1,7 +1,6 @@
-name: sample-nodejs
+name: sample
 services:
-- environment_slug: node-js
+- name: sample
   github:
     branch: main
     repo: markusthoemmes/sample-nodejs
-  name: sample-nodejs

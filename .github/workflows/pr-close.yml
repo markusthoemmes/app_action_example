@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: delete preview app
-        uses: markusthoemmes/app_actions/delete@main
+        uses: digitalocean/app_action/delete@v2
         with:
           from_pr_preview: "true"
           ignore_not_found: "true"
