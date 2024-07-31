@@ -34,3 +34,4 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
           app_spec_location: .do/app-image.yaml
+          print_deploy_logs: true
