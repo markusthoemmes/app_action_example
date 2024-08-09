@@ -28,7 +28,7 @@ jobs:
           push: true
           tags: ghcr.io/${{ github.repository }}:latest
       - name: Deploy the app
-        uses: digitalocean/app_action/deploy@v2
+        uses: digitalocean/app_action/deploy@update-all-source-versions  
         env:
           IMAGE_DIGEST_SAMPLE: ${{ steps.push.outputs.digest }}
         with:
