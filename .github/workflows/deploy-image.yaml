@@ -28,10 +28,11 @@ jobs:
           push: true
           tags: ghcr.io/${{ github.repository }}:latest
       - name: Deploy the app
-        uses: digitalocean/app_action/deploy@v2
+        uses: digitalocean/app_action/deploy@project-id
         env:
           SAMPLE_DIGEST: ${{ steps.push.outputs.digest }}
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
           app_spec_location: .do/app-image.yaml
           print_deploy_logs: true
+          project_id: 0391450a-7e92-48c3-a149-54929b0bbd50
