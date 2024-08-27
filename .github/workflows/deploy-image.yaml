@@ -35,4 +35,3 @@ jobs:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
           app_spec_location: .do/app-image.yaml
           print_deploy_logs: true
-          project_id: 0391450a-7e92-48c3-a149-54929b0bbd50
