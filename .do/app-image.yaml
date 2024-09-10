@@ -3,7 +3,7 @@ services:
 - name: sample
   envs:
   - name: SOME_SECRET
-    value: ${{ secrets.SOME_SECRET }}
+    value: ${SOME_SECRET}
     type: SECRET
   image:
     registry_type: GHCR

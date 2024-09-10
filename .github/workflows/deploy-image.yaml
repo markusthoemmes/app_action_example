@@ -31,6 +31,7 @@ jobs:
         uses: digitalocean/app_action/deploy@v2
         env:
           SAMPLE_DIGEST: ${{ steps.push.outputs.digest }}
+          SOME_SECRET: ${{ secrets.SOME_SECRET }}
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
           app_spec_location: .do/app-image.yaml
