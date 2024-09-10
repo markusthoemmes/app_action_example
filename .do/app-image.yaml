@@ -2,7 +2,7 @@ name: sampleimage
 services:
 - name: sample
   envs:
-  - name: SOME_SECRET
+  - key: SOME_SECRET
     value: ${SOME_SECRET}
     type: SECRET
   image:
