@@ -15,6 +15,10 @@ jobs:
     steps:
       - name: checkout repo
         uses: actions/checkout@v4
+      - name: debug name pieces
+        run: |
+          echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
+          echo "GITHUB_REF_NAME: $GITHUB_REF_NAME"
       - name: deploy the app
         id: run
         uses: digitalocean/app_action/deploy@v2

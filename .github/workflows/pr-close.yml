@@ -9,6 +9,10 @@ jobs:
   closed:
     runs-on: ubuntu-latest
     steps:
+      - name: debug name pieces
+        run: |
+          echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
+          echo "GITHUB_REF_NAME: $GITHUB_REF_NAME"
       - name: delete preview app
         uses: digitalocean/app_action/delete@v2
         with:
