@@ -25,7 +25,7 @@ jobs:
           cat $GITHUB_EVENT_PATH
       - name: deploy the app
         id: run
-        uses: digitalocean/app_action/deploy@v2
+        uses: digitalocean/app_action/deploy@better-pr-number-extraction
         with:
           deploy_pr_preview: "true"
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}

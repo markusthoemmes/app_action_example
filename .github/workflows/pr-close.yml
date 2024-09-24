@@ -18,7 +18,7 @@ jobs:
           echo "GITHUB_REF: $GITHUB_REF"
           cat $GITHUB_EVENT_PATH
       - name: delete preview app
-        uses: digitalocean/app_action/delete@v2
+        uses: digitalocean/app_action/delete@better-pr-number-extraction
         with:
           from_pr_preview: "true"
           ignore_not_found: "true"
