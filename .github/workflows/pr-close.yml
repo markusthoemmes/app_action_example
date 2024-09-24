@@ -16,6 +16,7 @@ jobs:
           echo "GITHUB_HEAD_REF: $GITHUB_HEAD_REF"
           echo "GITHUB_BASE_REF: $GITHUB_BASE_REF"
           echo "GITHUB_REF: $GITHUB_REF"
+          cat $GITHUB_EVENT_PATH
       - name: delete preview app
         uses: digitalocean/app_action/delete@v2
         with:
